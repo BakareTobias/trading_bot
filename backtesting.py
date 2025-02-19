@@ -83,7 +83,7 @@ if __name__ == '__main__':
     # startup procedure
     startup = start_up(project_settings=project_settings)
     
-    symbol=project_settings['mt5']['symbols'][3]
+    symbol=project_settings['mt5']['symbols'][2]
     ema_one = 20
     ema_two = 50
     rsi = ema_cross_strategy.ema_cross_strategy(
