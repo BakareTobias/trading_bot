@@ -51,7 +51,7 @@ def backtest_data(symbol, balance, amount_to_risk, test_period,ema_one,ema_two):
         """ STAGE 1: preparing row and spread """
         row = backtest_data.iloc[i]
         # Convert spread to decimal
-        spread = row["spread"] / 100
+        #spread = row["spread"] / 100
 
 
         """ STAGE 2 Trade placement: only place a trade if row["place_trade"] is True and no trade is currently open. """
