@@ -1,8 +1,8 @@
 import talib
 import mt5_lib
-import main
+import script
 
-project_settings = main.get_project_settings('settings.json')
+project_settings = script.get_project_settings('settings.json')
 candles = mt5_lib.get_candlesticks(
     symbol=project_settings['mt5']['symbols'][0],
     timeframe=project_settings['mt5']['timeframe'],

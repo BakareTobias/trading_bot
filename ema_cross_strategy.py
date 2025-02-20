@@ -100,6 +100,16 @@ def ema_cross_strategy(symbol,timeframe, ema_one, ema_two, balance, amount_to_ri
             symbol=symbol
         )
 
+        #do not place a new trade till old trade is closed
+        open_trades = mt5_lib.get_filtered_list_of_orders(
+            symbol=symbol, 
+            comment=comment_string)
+    
+        if open_trades:
+            print(f"Trade already open for {symbol}. Skipping new trade.")
+            return False  # Do not open a new trade
+
+
         #function to send telegram message 
         telegram_lib.send_telegram_message(
             stop_price=trade_event['stop_price'].values,
@@ -109,8 +119,9 @@ def ema_cross_strategy(symbol,timeframe, ema_one, ema_two, balance, amount_to_ri
             comment=comment_string
         )
 
+        
 
-        """ #Make trade 
+        #Make trade 
         make_trade_outcome = helper_library.make_trade(
             balance=balance,
             comment=comment_string,
@@ -119,16 +130,53 @@ def ema_cross_strategy(symbol,timeframe, ema_one, ema_two, balance, amount_to_ri
             take_profit=trade_event['take_profit'].values,
             stop_loss=trade_event['stop_loss'].values,
             stop_price=trade_event['stop_price'].values
-        ) """
+        )
     else: 
         make_trade_outcome = False
     return make_trade_outcome
 
+#function to run EMA strategy 
+def ema_cross_strategy_backtest(symbol,timeframe, ema_one, ema_two, test_period):
+    """ function which backtests EMA cross strategy 
+    params: symbol- string of the symbol/pair
+            timeframe: string of timeframe to be queried 
+            ema_one: integer of lowest timeframe EMA
+            ema_two: integer of higher timeframe EMA
+            test_period - integer of number of rows to test 
+    return: trade eent dataframe """
+
+    """ PSEUDO CODE STEPS
+    Step 1: Retrieve data -> get data()
+    Step 2: Calculate indicators - calc_indicators()
+    Step 3: Determine if trade event has occured and calculate parameters for all info available- det_trade()
+     """
+
+    #Step 1
+    data = get_data(
+        symbol=symbol,
+        timeframe=timeframe,
+        test_period=test_period
+        
+    )
+
+    #Step 2
+    data = calc_indicators(
+        data=data,
+        ema_one=ema_one,
+        ema_two=ema_two
+    )
+
+    #Step 3 
+    data = det_trade(
+        data=data,
+        ema_one=ema_one,
+        ema_two=ema_two
+    )
+    return data
     
 
-
 #Step 1: retrieve data
-def get_data(symbol, timeframe):
+def get_data(symbol, timeframe,test_period):
     """ function to get data from mt5. data is in from of candlesticks
     param:  symbol: string
             timeframe: string
@@ -137,7 +185,7 @@ def get_data(symbol, timeframe):
     data = mt5_lib.get_candlesticks(
         symbol=symbol,
         timeframe=timeframe,
-        number_of_candles=300
+        number_of_candles=test_period
     )
     return data
 

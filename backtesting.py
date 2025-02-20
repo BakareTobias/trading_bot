@@ -86,13 +86,12 @@ if __name__ == '__main__':
     symbol=project_settings['mt5']['symbols'][2]
     ema_one = 20
     ema_two = 50
-    rsi = ema_cross_strategy.ema_cross_strategy(
+    rsi = ema_cross_strategy.ema_cross_strategy_backtest(
         symbol=symbol,
         timeframe=project_settings['mt5']['timeframe'],
         ema_one= ema_one,
         ema_two= ema_two,
-        balance=2000,
-        amount_to_risk=20)
+        test_period=10000)
  
 
 
