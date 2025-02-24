@@ -60,7 +60,7 @@ def ema_cross_strategy(symbol,timeframe, ema_one, ema_two, balance, amount_to_ri
     Step 2: Calculate indicators - calc_indicators()
     Step 3: Determine if trade event has occured and calculate parameters for all info available- det_trade()
     Step 4: check most recent candle for trading opportunity 
-    Step 5: if trade event has occured send order   """
+    Step 5: if trade event has occured send order and telegram signal   """
 
     #Step 1
     data = get_data(
@@ -157,6 +157,7 @@ def ema_cross_strategy_backtest(symbol,timeframe, ema_one, ema_two, test_period)
         timeframe=timeframe,
         test_period=test_period
         
+        
     )
 
     #Step 2
@@ -176,7 +177,7 @@ def ema_cross_strategy_backtest(symbol,timeframe, ema_one, ema_two, test_period)
     
 
 #Step 1: retrieve data
-def get_data(symbol, timeframe,test_period):
+def get_data(symbol, timeframe,test_period=300):
     """ function to get data from mt5. data is in from of candlesticks
     param:  symbol: string
             timeframe: string
