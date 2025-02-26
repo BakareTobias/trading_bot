@@ -23,7 +23,7 @@ def calc_lot_size(balance, amount_to_risk, stop_loss, stop_price, symbol):
     symbol_name = symbol_name[0]
 
     #branch based on lot size 
-    if 'JPY' or 'XAU' in symbol :
+    if 'JPY' in symbol :
         #USDJPY pip size is 0.01
         pip_size = 0.01
         #calculate the amount of pips being risked 
@@ -55,7 +55,18 @@ def calc_lot_size(balance, amount_to_risk, stop_loss, stop_price, symbol):
         pip_value = amount_to_risk/no_of_pips_risked
         #calculate the raw lot size 
         raw_lot_size = pip_value / 10
-        
+
+
+    pip_size =0.01
+    # Calculate the number of pips being risked
+    no_of_pips_risked = abs((stop_price - stop_loss) / pip_size)
+
+    # Calculate pip value
+    pip_value = (1 * pip_size) / stop_price
+
+    # Calculate raw lot size
+    raw_lot_size = amount_to_risk / (pip_value * no_of_pips_risked)
+    
     #raise error if lot size is less than 0.01(smallest size most brokers accept)
     if raw_lot_size < 0.01:
             raise ValueError (f'lot size({raw_lot_size}) is too small: /n Entry Price:{stop_price}  Stop Loss:{stop_loss}')
@@ -64,10 +75,10 @@ def calc_lot_size(balance, amount_to_risk, stop_loss, stop_price, symbol):
     #rounds to 2 decimal places.(on a small account ie <5000 USD this rounding may affect risk)
     lot_size = round(lot_size,2)
     #add in a catch to make sure lot size is not extreme 
-    if lot_size >=10:
+    if lot_size >=1:
         lot_size = 9.99
 
-    return lot_size
+    return 0.01
 
 
 

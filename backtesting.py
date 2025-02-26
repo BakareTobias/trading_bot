@@ -83,19 +83,19 @@ if __name__ == '__main__':
     # startup procedure
     startup = start_up(project_settings=project_settings)
     
-    symbol=project_settings['mt5']['symbols'][2]
-    ema_one = 20
-    ema_two = 50
-    """ data = ema_cross_strategy.ema_cross_strategy_backtest(
+    symbol=project_settings['mt5']['symbols'][0]
+    ema_one = 60
+    ema_two = 215
+    data = ema_cross_strategy.ema_cross_strategy_backtest(
         symbol=symbol,
         timeframe=project_settings['mt5']['timeframe'],
         ema_one= ema_one,
         ema_two= ema_two,
-        test_period=10000)
+        test_period=50000)
  
 
 
-    data.to_csv(f"{symbol}_{ema_one}_{ema_two}") """
+    data.to_csv(f"{symbol}_{ema_one}_{ema_two}")
 
     data = mean_reversion_strategy_1.mean_reversion_strategy_backtest(
         symbol=symbol,
@@ -108,8 +108,8 @@ if __name__ == '__main__':
     backtest_results = backtest_library.backtest_data(
         symbol=symbol,
         balance=2000,
-        amount_to_risk=20,
-        test_period=9000,
+        amount_to_risk=10,
+        test_period=50000,
         ema_one=ema_one,
         ema_two=ema_two
     )
@@ -136,7 +136,7 @@ if __name__ == '__main__':
     # Startup procedure
     startup = start_up(project_settings=project_settings)
     
-    symbol = project_settings['mt5']['symbols'][4]
+    symbol = project_settings['mt5']['symbols'][0]
     
     # Variables to track the best EMA combination and highest final balance.
     best_balance = -float("inf")
@@ -145,7 +145,7 @@ if __name__ == '__main__':
 
     # Loop through desired EMA values.
     # (Modify these ranges as needed for your testing.)
-    for ema_one in range(40, 80, 5):  #short EMA
+    for ema_one in range(45, 70, 5):  #short EMA
         for ema_two in range(160, 230, 5):  # long EMA
             # Optionally, skip if ema_two isn't greater than ema_one.
             if ema_two <= ema_one:
@@ -154,14 +154,14 @@ if __name__ == '__main__':
             print(f"Testing EMA combination: EMA1 = {ema_one}, EMA2 = {ema_two}")
 
             # Generate the strategy signals using the current EMA combination.
-            rsi = ema_cross_strategy.ema_cross_strategy(
+            rsi = ema_cross_strategy.ema_cross_strategy_backtest(
                 symbol=symbol,
                 timeframe=project_settings['mt5']['timeframe'],
                 ema_one=ema_one,
                 ema_two=ema_two,
-                balance=2000,
-                amount_to_risk=20
-            )
+                test_period=10000,
+
+                )
             
             # Save the signals file (optional).
             rsi.to_csv(f"{symbol}_{ema_one}_{ema_two}")

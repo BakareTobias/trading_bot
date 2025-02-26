@@ -1,10 +1,10 @@
 {
     "mt5" :{
-        "username": "3213890",
-        "password": "-c0sRvMj",
-        "Server": "Just2TradeSVG-MT5",
+        "username": "31794667",
+        "password": "Exbiznes01.",
+        "Server": "Deriv-Demo",
         "mt5_pathway":"C:/Program Files/MetaTrader 5/terminal64.exe",
-        "symbols" : ["USDJPY","GBPJPY","EURUSD"],
+        "symbols" : ["Volatility 150 (1s) Index.0"],
         "timeframe": "M15"
     },
 
