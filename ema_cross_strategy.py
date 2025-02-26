@@ -274,8 +274,8 @@ def det_trade(data, ema_one, ema_two):
             
             #find when EMA cross is True
             if dataframe.loc[i,'ema_cross']:
-                #determine if candle above EMA
-                if dataframe.loc[i,ema_column] < dataframe.loc[i,'close']:
+                #determine if green candle 
+                if dataframe.loc[i,'open'] < dataframe.loc[i,'close']:
                     #stop loss = larger EMA 
                     stop_loss = dataframe.loc[i,ema_column]
                     #stop price = high of recently closed candle 
@@ -283,14 +283,13 @@ def det_trade(data, ema_one, ema_two):
                     #take profit = (stop price - stop loss) + stop price
                     distance = stop_price-stop_loss
                     take_profit = 2.5*distance + stop_price
-                #elif candle is candle close below EMA column
-
+                
                     #add calculated values back to dataframe
                     dataframe.loc[i, 'stop_loss'] = stop_loss
                     dataframe.loc[i, 'stop_price'] = stop_price
                     dataframe.loc[i, 'take_profit'] = take_profit
-
-                elif dataframe.loc[i,ema_column] < dataframe.loc[i,'open']:
+                #elif red candle
+                elif dataframe.loc[i,'open'] > dataframe.loc[i,'close']:
                     #stop loss = larger EMA 
                     stop_loss = dataframe.loc[i,ema_column]
                     #stop price = high of recently closed candle 

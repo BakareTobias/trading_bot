@@ -122,13 +122,13 @@ def backtest_data(symbol, balance, amount_to_risk, test_period,ema_one,ema_two):
                     "pips_made" : pips_to_be_made
                 }
 
-                telegram_lib.send_telegram_message(
+                """ telegram_lib.send_telegram_message(
                     stop_price=entry_price,
                     stop_loss=sl,
                     take_profit=tp,
                     lot_size=lot_size,
                     comment=f'EMA_cross_{symbol}'
-                )
+                ) """
             else:
                 # If risk:reward is less than 1.5, skip placing the trade.
                 pass
