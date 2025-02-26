@@ -28,13 +28,13 @@ def send_telegram_message(stop_price, stop_loss, take_profit, lot_size,  comment
     RR = (take_profit-stop_price)/(stop_loss-stop_price)
     RR = abs(RR)
     message =(f'''
-                Trade Signal: {comment}
-                Order Type  : {order_type}
-                Entry       : {stop_price}
-                Lot Size    : {lot_size}
-                Stop Loss   : {stop_loss}
-                Take Profit : {take_profit}
-                RR          : {RR}
+    {comment}
+    Order Type  : {order_type}
+    Entry       : {stop_price}
+    Lot Size    : {lot_size}
+    Stop Loss   : {stop_loss}
+    Take Profit : {take_profit}
+    RR          : {RR}
             ''')
     
 

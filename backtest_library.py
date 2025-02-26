@@ -1,4 +1,5 @@
 import pandas as pd
+import telegram_lib
 import  helper_library
 
 
@@ -102,7 +103,7 @@ def backtest_data(symbol, balance, amount_to_risk, test_period,ema_one,ema_two):
                 pips_risked = abs((entry_price-sl)/pip)
 
                 #capture pips won (if profit)
-                pips_made = abs((entry_price-tp)/pip)
+                pips_to_be_made = abs((entry_price-tp)/pip)
 
                 #capture pip value(necessary for profit/loss calculations)
                 pip_value_numerator = 100000*pip
@@ -118,8 +119,16 @@ def backtest_data(symbol, balance, amount_to_risk, test_period,ema_one,ema_two):
                     "risk_reward": risk_reward,  # Store the pre-trade risk:reward ratio if needed.
                     "pip_value": pip_value, #value of a pip
                     "pips_risked":pips_risked, #potential pip loss
-                    "pips_made" : pips_made
+                    "pips_made" : pips_to_be_made
                 }
+
+                telegram_lib.send_telegram_message(
+                    stop_price=entry_price,
+                    stop_loss=sl,
+                    take_profit=tp,
+                    lot_size=lot_size,
+                    comment=f'EMA_cross_{symbol}'
+                )
             else:
                 # If risk:reward is less than 1.5, skip placing the trade.
                 pass

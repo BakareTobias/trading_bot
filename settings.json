@@ -4,7 +4,7 @@
         "password": "-c0sRvMj",
         "Server": "Just2TradeSVG-MT5",
         "mt5_pathway":"C:/Program Files/MetaTrader 5/terminal64.exe",
-        "symbols" : ["USDJPY","GBPJPY","EURUSD"],
+        "symbols" : ["EURUSD"],
         "timeframe": "M15"
     },
 

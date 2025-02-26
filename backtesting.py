@@ -86,23 +86,17 @@ if __name__ == '__main__':
     symbol=project_settings['mt5']['symbols'][2]
     ema_one = 20
     ema_two = 50
-    """ data = ema_cross_strategy.ema_cross_strategy_backtest(
+    data = ema_cross_strategy.ema_cross_strategy_backtest(
         symbol=symbol,
         timeframe=project_settings['mt5']['timeframe'],
         ema_one= ema_one,
         ema_two= ema_two,
-        test_period=10000)
+        test_period=300)
  
 
 
-    data.to_csv(f"{symbol}_{ema_one}_{ema_two}") """
+    data.to_csv(f"{symbol}_{ema_one}_{ema_two}")
 
-    data = mean_reversion_strategy_1.mean_reversion_strategy_backtest(
-        symbol=symbol,
-        timeframe=project_settings['mt5']['timeframe']
-    )
-
-    data.to_csv(f"{symbol}_Mean_Reversion") 
     
 
     backtest_results = backtest_library.backtest_data(
