@@ -34,7 +34,7 @@ def backtest_data(symbol, balance, amount_to_risk, test_period,ema_one,ema_two):
     TRADE_LOG = []
 
     #set pip value depending on symbol. JPY crosses all have 0.01 pip value
-    if 'JPY' or 'XAU' in symbol:
+    if ('JPY' in symbol) or ("XAU" in symbol):
         pip = 0.01
         dp  = 2#round values to 2 decimal places
 

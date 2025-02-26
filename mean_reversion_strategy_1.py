@@ -93,6 +93,45 @@ def mean_reversion_strategy(symbol,timeframe,balance,amount_to_risk=20):
         make_trade_outcome = False
     return make_trade_outcome
 
+#function to backtest strategy
+def mean_reversion_strategy_backtest(symbol,timeframe):
+    """ function that runs mean reversion strategy. all rules defined above
+    params: symbol - string of pair being traded
+            timeframe - string of timeframe to run strategy on
+            balance - float of current trading balance 
+            amount to risk - float of risk per trade(default 20 of balance)"""
+    
+    """ PSEUDO CODE STEPS
+    Step 1: Retrieve data -> get data()
+    Step 2: Calculate indicators - calc_indicators()
+    Step 3: Check if each condition is met 
+            if yes, calculate trade parameters
+    Step 4: Check most recent candle for trading opportunity
+    Step 5: If trade event has occured, send order """
+
+    #Step 1
+    data = get_data(
+        symbol=symbol,
+        timeframe=timeframe,
+        
+    )
+
+    #Step 2
+    data = calc_indicators(
+        data=data,
+        ema_period=ema_period,
+        rsi_period=rsi_period,
+        atr_period=ATR_period
+    
+    )    
+
+    #Step 3
+    data = det_trade(
+        data=data
+    )
+    return data
+
+
 
 #Step 1: retrieve data
 def get_data(symbol, timeframe):
