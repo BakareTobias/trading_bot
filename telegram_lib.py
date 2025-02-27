@@ -25,7 +25,7 @@ def send_telegram_message(stop_price, stop_loss, take_profit, lot_size,  comment
 
     #calculate RR
     RR = (take_profit-stop_price)/(stop_loss-stop_price)
-    RR = abs(RR)
+    RR = round(abs(RR),2)
     message =(f'''
                 Trade Signal: {comment}
                 Order Type  : {order_type}
@@ -47,17 +47,17 @@ def send_telegram_message(stop_price, stop_loss, take_profit, lot_size,  comment
         CHAT_ID = project_settings['telegram_bot_deriv']['chat_id']
 
     
+    for chat in CHAT_ID:
+        url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
+        payload = {
+            "chat_id": chat,
+            "text": message
+        }
+        response = requests.post(url, json=payload)
 
-    url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
-    payload = {
-        "chat_id": CHAT_ID,
-        "text": message
-    }
-    response = requests.post(url, json=payload)
-
-    if response.status_code == 200:
-        print("Message sent successfully!")
-    else:
-        print(f"Failed to send message: {response.text}")
+        if response.status_code == 200:
+            print("Message sent successfully!")
+        else:
+            print(f"Failed to send message: {response.text}")
 
 # Example usage

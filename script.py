@@ -44,9 +44,11 @@ if __name__ == '__main__':
         #start while loop; #exit loop if Ctrl+C is pressed
         try:
             while 1:
+                #check internet connection
+                misc.checkInternetHttplib()
                 #get a value for current time. [using BTCUSD as it trads 24/7]
                 time_candle = mt5_lib.get_candlesticks(
-                    symbol='BTCUSD.cfd',
+                    symbol='BTCUSD.0',
                     timeframe=project_settings['mt5']['timeframe'],
                     number_of_candles=1
                 )

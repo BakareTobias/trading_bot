@@ -125,7 +125,7 @@ def ema_cross_strategy(symbol,timeframe, ema_one, ema_two, balance, amount_to_ri
 
         
 
-        #Make trade 
+        """ #Make trade 
         make_trade_outcome = helper_library.make_trade(
             balance=balance,
             comment=comment_string,
@@ -134,7 +134,8 @@ def ema_cross_strategy(symbol,timeframe, ema_one, ema_two, balance, amount_to_ri
             take_profit=trade_event['take_profit'].values,
             stop_loss=trade_event['stop_loss'].values,
             stop_price=trade_event['stop_price'].values
-        )
+        ) """
+        make_trade_outcome = True
     else: 
         make_trade_outcome = False
     return make_trade_outcome
@@ -275,21 +276,21 @@ def det_trade(data, ema_one, ema_two):
                 #determine if green candle
                 if dataframe.loc[i,'open'] < dataframe.loc[i,'close']:
                     #stop loss = larger EMA 
-                    stop_loss = dataframe.loc[i,ema_column]
+                    stop_loss = round(dataframe.loc[i,ema_column], 4)
                     #stop price = high of recently closed candle 
                     stop_price = dataframe.loc[i,'high'] 
                     #take profit = (stop price - stop loss) + stop price
                     distance = stop_price-stop_loss
-                    take_profit = 2.5*distance + stop_price
+                    take_profit = round(stop_price + 2.5*distance,4 )
                 #elif candle is red
                 elif dataframe.loc[i,'close'] < dataframe.loc[i,'open']:
                     #stop loss = larger EMA 
-                    stop_loss = dataframe.loc[i,ema_column]
+                    stop_loss = round(dataframe.loc[i,ema_column], 4)
                     #stop price = high of recently closed candle 
                     stop_price = dataframe.loc[i,'low'] 
                     #take profit = (stop price - stop loss) + stop price
                     distance = stop_loss-stop_price
-                    take_profit =  stop_price - 2.5*distance 
+                    take_profit =  round(stop_price - 2.5*distance,4 )
                 else:
                     stop_loss = 0.0
                     stop_price = 0.0

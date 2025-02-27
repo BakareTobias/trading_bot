@@ -1,6 +1,6 @@
 import pandas as pd
 import  helper_library
-
+import telegram_lib
 
 #function to return max streak of wins/losses
 def max_consecutive_results(trade_log, result_type):
@@ -83,6 +83,7 @@ def backtest_data(symbol, balance, amount_to_risk, test_period,ema_one,ema_two):
                 risk = 0
                 reward = 0
                 order_type = None
+
 
             # Calculate risk:reward ratio (absolute value to cover both BUY & SELL)
             risk_reward = abs(reward / risk) if risk != 0 else 0

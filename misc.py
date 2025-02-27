@@ -69,7 +69,7 @@ def checkInternetHttplib(url="www.google.com",timeout=3):
         # only header requested for fast operation
         connection.request("HEAD", "/")
         connection.close()  # connection closed
-        print("Internet On")
+        
         return True
     except Exception as e:
         raise Exception(f'Internet connection failed:{e}')

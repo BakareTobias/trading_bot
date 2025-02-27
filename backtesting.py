@@ -83,11 +83,11 @@ if __name__ == '__main__':
     # startup procedure
     startup = start_up(project_settings=project_settings)
     
-    symbol=project_settings['mt5']['symbols'][7]
+    symbol=project_settings['mt5']['symbols'][0]
     #use json for ema values
     ema_one = project_settings["symbols"][f"{symbol}"][0]
     ema_two = project_settings["symbols"][f"{symbol}"][1] 
-    test_period = 9000
+    test_period = 300
     data = ema_cross_strategy.ema_cross_strategy_backtest(
         symbol=symbol,
         timeframe=project_settings['mt5']['timeframe'],
@@ -141,8 +141,8 @@ if __name__ == '__main__':
 
     # Loop through desired EMA values.
     # (Modify these ranges as needed for your testing.)
-    for ema_one in range(45, 70, 5):  #short EMA
-        for ema_two in range(160, 230, 5):  # long EMA
+    for ema_one in range(45, 65, 5):  #short EMA
+        for ema_two in range(180, 220, 5):  # long EMA
             # Optionally, skip if ema_two isn't greater than ema_one.
             if ema_two <= ema_one:
                 continue

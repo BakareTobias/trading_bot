@@ -24,7 +24,7 @@ def calc_custom_ema(dataframe, ema_size):
         #if i > ema_size, calculate EMA 
         elif i>ema_size:
             ema_value = dataframe.loc[i,'close']* multiplier + dataframe.loc[i-1, ema_name]*(1-multiplier)
-            dataframe.loc[i, ema_name] = ema_value
+            dataframe.loc[i, ema_name] = round(ema_value,4)
         #if i < EMA(default condition)
         else:
             dataframe.loc[i, ema_name]= 0.00
