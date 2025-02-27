@@ -3,8 +3,6 @@ import pandas
 #Import self made custom libraries
 import misc
 import mt5_lib
-import mean_reversion_strategy_1
-import trend_following_1
 import ema_cross_strategy
 import telegram_lib
 
