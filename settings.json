@@ -4,14 +4,30 @@
         "password": "Exbiznes01.",
         "Server": "Deriv-Demo",
         "mt5_pathway":"C:/Program Files/MetaTrader 5/terminal64.exe",
-        "symbols" : ["Volatility 150 (1s) Index.0"],
+        "symbols" : ["EURUSD.0","USDJPY.0","GBPJPY.0","Volatility 150 (1s) Index.0","Jump 75 Index.0","Jump 50 Index.0","Jump 25 Index.0","Jump 10 Index.0"],
         "timeframe": "M15"
     },
 
    
-    "telegram_bot" :{
+    "telegram_bot_forex" :{
         "bot_token":"7657083570:AAGOp4msuYcxVxOnYLqW0iKgEspAlrqYQyQ",
         "chat_id" :"687435351"
+    },
+    "telegram_bot_deriv" :{
+        "bot_token": "7622550709:AAFk1Rnia6Bi9VsFc7W0KlwE0Y6bTluhDkc",
+        "chat_id": "687435351"
+    },
+
+    "symbols" :{
+        "EURUSD.0" : [20,50],
+        "USDJPY.0" : [55,200],
+        "GBPJPY.0" : [65,195],
+        "Volatility 150 (1s) Index.0" : [60,215],
+        "Jump 75 Index.0" : [60,215],
+        "Jump 50 Index.0" : [60,215],
+        "Jump 25 Index.0" : [60,215],
+        "Jump 10 Index.0" : [60,215]
+
     }
 
    

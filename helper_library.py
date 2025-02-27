@@ -35,7 +35,7 @@ def calc_lot_size(balance, amount_to_risk, stop_loss, stop_price, symbol):
         #calculate the raw lot size 
         raw_lot_size = amount_to_risk/(pip_value * no_of_pips_risked)
         
-    elif symbol_name == 'USDCAD':
+    elif symbol_name == 'EURUSD':
         #USDCAD pip size is 0.0001
         pip_size = 0.0001
         #calculate the amount of pips being risked 
@@ -47,25 +47,13 @@ def calc_lot_size(balance, amount_to_risk, stop_loss, stop_price, symbol):
 
         #calculate the raw lot size 
         raw_lot_size = pip_value / 10
-    else: #assuming pip size to be 0.0001
-        pip_size = 0.0001
-        #calculate the amount of pips being risked 
-        no_of_pips_risked = abs((stop_price - stop_loss) / pip_size)
-        #calculate pip value 
-        pip_value = amount_to_risk/no_of_pips_risked
-        #calculate the raw lot size 
-        raw_lot_size = pip_value / 10
+    ###JOHN DERIV PAIRS
+    else: #if one of John Pairs, lot size is default 0.01
+
+        raw_lot_size = 0.01
 
 
-    pip_size =0.01
-    # Calculate the number of pips being risked
-    no_of_pips_risked = abs((stop_price - stop_loss) / pip_size)
 
-    # Calculate pip value
-    pip_value = (1 * pip_size) / stop_price
-
-    # Calculate raw lot size
-    raw_lot_size = amount_to_risk / (pip_value * no_of_pips_risked)
     
     #raise error if lot size is less than 0.01(smallest size most brokers accept)
     if raw_lot_size < 0.01:
@@ -78,7 +66,7 @@ def calc_lot_size(balance, amount_to_risk, stop_loss, stop_price, symbol):
     if lot_size >=1:
         lot_size = 9.99
 
-    return 0.01
+    return lot_size
 
 
 

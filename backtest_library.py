@@ -38,12 +38,12 @@ def backtest_data(symbol, balance, amount_to_risk, test_period,ema_one,ema_two):
         pip = 0.01
         dp  = 2#round values to 2 decimal places
 
-    else:
+    elif ('USD' in symbol):
         pip = 0.0001
         dp = 4#round values to 4 decimal places
-    
-    dp = 2
-    pip=0.01
+    else:
+        dp = 2
+        pip=0.01
 
     # Read OHLC + Spread data from a pickle file.
     backtest_data = pd.read_csv(f"{symbol}_{ema_one}_{ema_two}")

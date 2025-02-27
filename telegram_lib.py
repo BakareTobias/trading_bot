@@ -5,11 +5,9 @@ settings_filepath = "settings.json"
 
 project_settings = misc.get_project_settings(import_filepath=settings_filepath)
 
-# Replace with your bot token and chat ID
-BOT_TOKEN = project_settings['telegram_bot']['bot_token']
-CHAT_ID = project_settings['telegram_bot']['chat_id']
 
-def send_telegram_message(stop_price, stop_loss, take_profit, lot_size,  comment):
+
+def send_telegram_message(stop_price, stop_loss, take_profit, lot_size,  comment,symbol):
     """
     Sends a message to the configured Telegram chat.
     param:   stop_price - float of stop price
@@ -17,6 +15,7 @@ def send_telegram_message(stop_price, stop_loss, take_profit, lot_size,  comment
             take_pprofit - float of take profit 
             lot_size - float of lot size
             comment - string of strategy and pair being traded
+            symbol - string of symbol to trade
     """
     #determine if buy or sell
     if stop_price > stop_loss:
@@ -36,6 +35,17 @@ def send_telegram_message(stop_price, stop_loss, take_profit, lot_size,  comment
                 Take Profit : {take_profit}
                 RR          : {RR}
             ''')
+    
+
+    if ('JPY' in symbol) or ('USD' in symbol): #forex pairs
+        #TobiasBot details
+        BOT_TOKEN = project_settings['telegram_bot_forex']['bot_token']
+        CHAT_ID = project_settings['telegram_bot_forex']['chat_id']
+    else: #DERIV PAIRS
+        #TobiasDeriv details
+        BOT_TOKEN = project_settings['telegram_bot_deriv']['bot_token']
+        CHAT_ID = project_settings['telegram_bot_deriv']['chat_id']
+
     
 
     url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"

@@ -15,7 +15,7 @@ def run_strategy(project_settings):
     #timeframe to trade 
     timeframe= project_settings['mt5']['timeframe']
 
-
+    
 
     #run through strategy for specified symbols 
     for symbol in symbols:
@@ -23,6 +23,9 @@ def run_strategy(project_settings):
         #Generate comment string 
         comment_string = f'EMA_Cross_Strategy_{symbol}' #as to be consistent with other definitions through out project
 
+        #use json for ema values
+        ema_one = project_settings["symbols"][f"{symbol}"][0]
+        ema_two = project_settings["symbols"][f"{symbol}"][1] 
         #cancel orders related to symbol and strategy 
         """ mt5_lib.cancel_filtered_orders(
             symbol=symbol,
@@ -32,8 +35,8 @@ def run_strategy(project_settings):
         data = ema_cross_strategy(
             symbol=symbol,
             timeframe=timeframe,
-            ema_one=50,
-            ema_two=100,
+            ema_one=ema_one,
+            ema_two=ema_two,
             balance=2000,
             amount_to_risk=20
             ) 
@@ -106,7 +109,7 @@ def ema_cross_strategy(symbol,timeframe, ema_one, ema_two, balance, amount_to_ri
             comment=comment_string)
     
         if open_trades:
-            print(f"Trade already open for {symbol}. Skipping new trade.")
+            print(f"EMA cross Trade already open for {symbol}. Skipping new trade.")
             return False  # Do not open a new trade
 
 
@@ -116,7 +119,8 @@ def ema_cross_strategy(symbol,timeframe, ema_one, ema_two, balance, amount_to_ri
             stop_loss=trade_event['stop_loss'].values,
             take_profit=trade_event['take_profit'].values,
             lot_size=lot_size,
-            comment=comment_string
+            comment=comment_string,
+            symbol = symbol
         )
 
         
@@ -143,7 +147,7 @@ def ema_cross_strategy_backtest(symbol,timeframe, ema_one, ema_two, test_period)
             ema_one: integer of lowest timeframe EMA
             ema_two: integer of higher timeframe EMA
             test_period - integer of number of rows to test 
-    return: trade eent dataframe """
+    return: trade  dataframe """
 
     """ PSEUDO CODE STEPS
     Step 1: Retrieve data -> get data()
