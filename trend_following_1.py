@@ -298,7 +298,7 @@ def run_strategy(project_settings):
     #symbol to trade
     symbols = project_settings['mt5']['symbols']
     #timeframe to trade 
-    timeframe= project_settings['mt5']['timeframe']
+    timeframe= project_settings['mt5']['timeframe'][0]
 
 
 

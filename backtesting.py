@@ -83,12 +83,12 @@ if __name__ == '__main__':
     # startup procedure
     startup = start_up(project_settings=project_settings)
     
-    symbol=project_settings['mt5']['symbols'][3]
+    symbol=project_settings['mt5']['symbols'][0]
  
-    test_period = 3982
+    test_period = 10000
     data = mean_reversion_strategy_1.mean_reversion_strategy_backtest(
         symbol=symbol,
-        timeframe=project_settings['mt5']['timeframe'],
+        timeframe=project_settings['mt5']['timeframe'][1],
         test_period = test_period
     )
  
@@ -148,7 +148,7 @@ if __name__ == '__main__':
             # Generate the strategy signals using the current EMA combination.
             rsi = ema_cross_strategy.ema_cross_strategy(
                 symbol=symbol,
-                timeframe=project_settings['mt5']['timeframe'],
+                timeframe=project_settings['mt5']['timeframe'][0],
                 ema_one=ema_one,
                 ema_two=ema_two,
                 balance=2000,

@@ -5,7 +5,7 @@ import script
 project_settings = script.get_project_settings('settings.json')
 candles = mt5_lib.get_candlesticks(
     symbol=project_settings['mt5']['symbols'][0],
-    timeframe=project_settings['mt5']['timeframe'],
+    timeframe=project_settings['mt5']['timeframe'][0],
     number_of_candles=1000
 )
 
@@ -14,7 +14,7 @@ print(candles)
 """     for symbol in symbols:
         candlesticks = mt5_lib.get_candlesticks(
             symbol=symbol,
-            timeframe= project_settings['mt5']['timeframe'],
+            timeframe= project_settings['mt5']['timeframe'][0],
             number_of_candles= 1000
         )
         print(candlesticks)
