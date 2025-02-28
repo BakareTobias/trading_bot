@@ -4,7 +4,7 @@
         "password": "-c0sRvMj",
         "Server": "Just2TradeSVG-MT5",
         "mt5_pathway":"C:/Program Files/MetaTrader 5/terminal64.exe",
-        "symbols" : ["USDJPY","GBPJPY","EURUSD"],
+        "symbols" : ["EURUSD","USDJPY","GBPJPY"],
         "timeframe": "M15"
     },
 
@@ -13,4 +13,6 @@
         "bot_token":"7657083570:AAGOp4msuYcxVxOnYLqW0iKgEspAlrqYQyQ",
         "chat_id" :"687435351"
     }
+
+   
 }

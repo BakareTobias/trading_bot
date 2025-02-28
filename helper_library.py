@@ -23,7 +23,8 @@ def calc_lot_size(balance, amount_to_risk, stop_loss, stop_price, symbol):
     symbol_name = symbol_name[0]
 
     #branch based on lot size 
-    if 'JPY' or 'XAU' in symbol :
+   #set pip value depending on symbol. JPY crosses all have 0.01 pip value
+    if ('JPY' in symbol) or ("XAU" in symbol):
         #USDJPY pip size is 0.01
         pip_size = 0.01
         #calculate the amount of pips being risked 

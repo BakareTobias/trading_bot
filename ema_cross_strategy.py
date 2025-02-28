@@ -32,8 +32,8 @@ def run_strategy(project_settings):
         data = ema_cross_strategy(
             symbol=symbol,
             timeframe=timeframe,
-            ema_one=50,
-            ema_two=100,
+            ema_one=20,
+            ema_two=50,
             balance=2000,
             amount_to_risk=20
             ) 
@@ -60,7 +60,7 @@ def ema_cross_strategy(symbol,timeframe, ema_one, ema_two, balance, amount_to_ri
     Step 2: Calculate indicators - calc_indicators()
     Step 3: Determine if trade event has occured and calculate parameters for all info available- det_trade()
     Step 4: check most recent candle for trading opportunity 
-    Step 5: if trade event has occured send order   """
+    Step 5: if trade event has occured send order and telegram signal   """
 
     #Step 1
     data = get_data(
@@ -82,14 +82,17 @@ def ema_cross_strategy(symbol,timeframe, ema_one, ema_two, balance, amount_to_ri
         ema_one=ema_one,
         ema_two=ema_two
     )
-
+   
     #Step 4
-    trade_event = data.tail(1).copy( )#copy info for most recent formed candle 
+
+    #note: trde signal canno tbe generated on a candle till it has finished forming. so we take the last 2 candles, the first will have our signal
+    trade_event = data.tail(2).copy()#copy info for most recent formed candle 
+    trade_event = trade_event.head(1)
     if trade_event['ema_cross'].values:
         #Make trade requires balance, comment, amount_to_risk
         #Create comment
         comment_string = f'EMA_Cross_Strategy_{symbol}'
-        print(comment_string)
+        
         
         #calculate lot-size to pass to telegram function
         lot_size = helper_library.calc_lot_size(
@@ -99,6 +102,7 @@ def ema_cross_strategy(symbol,timeframe, ema_one, ema_two, balance, amount_to_ri
             stop_price=trade_event['stop_price'].values,
             symbol=symbol
         )
+
 
         #do not place a new trade till old trade is closed
         open_trades = mt5_lib.get_filtered_list_of_orders(
@@ -157,6 +161,7 @@ def ema_cross_strategy_backtest(symbol,timeframe, ema_one, ema_two, test_period)
         timeframe=timeframe,
         test_period=test_period
         
+        
     )
 
     #Step 2
@@ -176,7 +181,7 @@ def ema_cross_strategy_backtest(symbol,timeframe, ema_one, ema_two, test_period)
     
 
 #Step 1: retrieve data
-def get_data(symbol, timeframe,test_period):
+def get_data(symbol, timeframe,test_period=300):
     """ function to get data from mt5. data is in from of candlesticks
     param:  symbol: string
             timeframe: string
@@ -232,7 +237,9 @@ def det_trade(data, ema_one, ema_two):
     :param dataframe: dataframe of data with indicators
     :param ema_one: integer of EMA size
     :param ema_two: integer of EMA size
-    :return: dataframe with trade values added
+    
+    
+    return: dataframe with trade values added
     """
      
     #Get the column names 
@@ -242,10 +249,10 @@ def det_trade(data, ema_one, ema_two):
     #choose largest EMA (EMA that will be used for stop loss)
     if ema_one > ema_two:
         ema_column = ema_one_column
-        min_value  = ema_one
+        longer_ema  = ema_one
     elif ema_two > ema_one:
         ema_column = ema_two_column
-        min_value = ema_two
+        longer_ema = ema_two
     else:
         #EMA values are equal, raise an error
         raise ValueError('EMA values are the same...')
@@ -261,13 +268,13 @@ def det_trade(data, ema_one, ema_two):
     #iterate through the dataframe and calculate trade signal for EMA cross
     for i in range(len(dataframe)):
         #skip rows until EMA starts 
-        if i<= (min_value ):
+        if i<= (longer_ema ):
             continue
         else:
             
             #find when EMA cross is True
             if dataframe.loc[i,'ema_cross']:
-                #determine if green candle
+                #determine if green candle 
                 if dataframe.loc[i,'open'] < dataframe.loc[i,'close']:
                     #stop loss = larger EMA 
                     stop_loss = dataframe.loc[i,ema_column]
@@ -276,8 +283,13 @@ def det_trade(data, ema_one, ema_two):
                     #take profit = (stop price - stop loss) + stop price
                     distance = stop_price-stop_loss
                     take_profit = 2.5*distance + stop_price
-                #elif candle is red
-                elif dataframe.loc[i,'close'] < dataframe.loc[i,'open']:
+                
+                    #add calculated values back to dataframe
+                    dataframe.loc[i, 'stop_loss'] = stop_loss
+                    dataframe.loc[i, 'stop_price'] = stop_price
+                    dataframe.loc[i, 'take_profit'] = take_profit
+                #elif red candle
+                elif dataframe.loc[i,'open'] > dataframe.loc[i,'close']:
                     #stop loss = larger EMA 
                     stop_loss = dataframe.loc[i,ema_column]
                     #stop price = high of recently closed candle 
@@ -285,13 +297,10 @@ def det_trade(data, ema_one, ema_two):
                     #take profit = (stop price - stop loss) + stop price
                     distance = stop_loss-stop_price
                     take_profit =  stop_price - 2.5*distance 
-                else:
-                    stop_loss = 0.0
-                    stop_price = 0.0
-                    take_profit = 0.0
-                #add calculated values back to dataframe
-                dataframe.loc[i, 'stop_loss'] = stop_loss
-                dataframe.loc[i, 'stop_price'] = stop_price
-                dataframe.loc[i, 'take_profit'] = take_profit
+               
+                    #add calculated values back to dataframe
+                    dataframe.loc[i, 'stop_loss'] = stop_loss
+                    dataframe.loc[i, 'stop_price'] = stop_price
+                    dataframe.loc[i, 'take_profit'] = take_profit
     #return dataframe
     return dataframe

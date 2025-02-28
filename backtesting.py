@@ -83,25 +83,28 @@ if __name__ == '__main__':
     # startup procedure
     startup = start_up(project_settings=project_settings)
     
-    symbol=project_settings['mt5']['symbols'][2]
+    symbol=project_settings['mt5']['symbols'][0]
     ema_one = 20
     ema_two = 50
-    rsi = ema_cross_strategy.ema_cross_strategy_backtest(
+    test_period =20000
+    data = ema_cross_strategy.ema_cross_strategy_backtest(
         symbol=symbol,
         timeframe=project_settings['mt5']['timeframe'],
         ema_one= ema_one,
         ema_two= ema_two,
-        test_period=10000)
+        test_period=test_period)
  
 
 
-    rsi.to_csv(f"{symbol}_{ema_one}_{ema_two}")
+    data.to_csv(f"{symbol}_{ema_one}_{ema_two}")
+
+    
 
     backtest_results = backtest_library.backtest_data(
         symbol=symbol,
         balance=2000,
         amount_to_risk=20,
-        test_period=9000,
+        test_period=test_period,
         ema_one=ema_one,
         ema_two=ema_two
     )
