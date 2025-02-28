@@ -1,17 +1,33 @@
 {
     "mt5" :{
-        "username": "3213890",
-        "password": "-c0sRvMj",
-        "Server": "Just2TradeSVG-MT5",
+        "username": "31794667",
+        "password": "Exbiznes01.",
+        "Server": "Deriv-Demo",
         "mt5_pathway":"C:/Program Files/MetaTrader 5/terminal64.exe",
-        "symbols" : ["EURUSD","USDJPY","GBPJPY"],
+        "symbols" : ["EURUSD.0","USDJPY.0","GBPJPY.0","GBPCHF.0","Volatility 150 (1s) Index.0","Jump 100 Index.0","Jump 75 Index.0","Jump 50 Index.0"],
         "timeframe": "M15"
     },
 
    
-    "telegram_bot" :{
+    "telegram_bot_forex" :{
         "bot_token":"7657083570:AAGOp4msuYcxVxOnYLqW0iKgEspAlrqYQyQ",
-        "chat_id" :"687435351"
+        "chat_id" :["687435351","6057112449"]
+    },
+    "telegram_bot_deriv" :{
+        "bot_token": "7622550709:AAFk1Rnia6Bi9VsFc7W0KlwE0Y6bTluhDkc",
+        "chat_id": ["687435351","6736472023"]
+    },
+
+    "symbols" :{
+        "EURUSD.0" : [20,50],
+        "USDJPY.0" : [55,200],
+        "GBPJPY.0" : [65,195],
+        "Volatility 150 (1s) Index.0" : [60,215],
+        "Jump 100 Index.0": [60,215],
+        "Jump 75 Index.0" : [45,200],
+        "Jump 50 Index.0" : [50,210]
+
+
     }
 
    

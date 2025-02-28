@@ -6,8 +6,8 @@ settings_filepath = "settings.json"
 project_settings = misc.get_project_settings(import_filepath=settings_filepath)
 
 # Replace with your bot token and chat ID
-BOT_TOKEN = project_settings['telegram_bot']['bot_token']
-CHAT_ID = project_settings['telegram_bot']['chat_id']
+BOT_TOKEN = project_settings['telegram_bot_forex']['bot_token']
+CHAT_ID = project_settings['telegram_bot_forex']['chat_id']
 
 def send_telegram_message(stop_price, stop_loss, take_profit, lot_size,  comment):
     """

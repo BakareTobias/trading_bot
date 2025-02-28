@@ -23,7 +23,7 @@ def max_consecutive_results(trade_log, result_type):
             current_streak = 0
     return max_streak
 
-def backtest_data(symbol, balance, amount_to_risk, test_period,ema_one,ema_two):
+def backtest_data(symbol, balance, amount_to_risk, test_period):
     """ Functiont to backtest one of my strategies using trading singal data provided 
     param:  symbol      -  string of symbol being backtested
             balance     -  int of start account balance
@@ -44,7 +44,7 @@ def backtest_data(symbol, balance, amount_to_risk, test_period,ema_one,ema_two):
         dp = 4#round values to 4 decimal places
 
     # Read OHLC + Spread data from a pickle file.
-    backtest_data = pd.read_csv(f"{symbol}_{ema_one}_{ema_two}")
+    backtest_data = pd.read_csv(f"{symbol}_Mean_Reversion")
     backtest_data = backtest_data.tail(test_period)
 
     #for each row in backtes_data
@@ -62,7 +62,7 @@ def backtest_data(symbol, balance, amount_to_risk, test_period,ema_one,ema_two):
             # Adjust entry price for spread. Here, row["stop_price"] is used as the basis.
             entry_price = row["stop_price"]  
             sl = row["stop_loss"]         # Stop Loss price
-            tp = row["take_profit"]     # Take Profit price
+            tp = row["take_profit_1"]     # Take Profit price
 
             # Determine trade type and calculate risk and reward.
             # For a BUY: risk = (entry - SL) and reward = (TP - entry)
@@ -86,7 +86,7 @@ def backtest_data(symbol, balance, amount_to_risk, test_period,ema_one,ema_two):
             risk_reward = abs(reward / risk) if risk != 0 else 0
 
             # Only place the trade if the risk:reward ratio is at least 1.5.
-            if risk_reward >= 0:
+            if risk_reward >= 1.0:
                 # Calculate lot size using the local calculator
                 lot_size = helper_library.calc_lot_size(
                     balance,

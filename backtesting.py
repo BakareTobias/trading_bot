@@ -83,20 +83,18 @@ if __name__ == '__main__':
     # startup procedure
     startup = start_up(project_settings=project_settings)
     
-    symbol=project_settings['mt5']['symbols'][0]
-    ema_one = 20
-    ema_two = 50
-    test_period =20000
-    data = ema_cross_strategy.ema_cross_strategy_backtest(
+    symbol=project_settings['mt5']['symbols'][3]
+ 
+    test_period = 3982
+    data = mean_reversion_strategy_1.mean_reversion_strategy_backtest(
         symbol=symbol,
         timeframe=project_settings['mt5']['timeframe'],
-        ema_one= ema_one,
-        ema_two= ema_two,
-        test_period=test_period)
+        test_period = test_period
+    )
  
 
 
-    data.to_csv(f"{symbol}_{ema_one}_{ema_two}")
+    data.to_csv(f"{symbol}_Mean_Reversion")
 
     
 
@@ -105,8 +103,7 @@ if __name__ == '__main__':
         balance=2000,
         amount_to_risk=20,
         test_period=test_period,
-        ema_one=ema_one,
-        ema_two=ema_two
+       
     )
 
     print(f"BACKTESTING RESULTS:{symbol}")

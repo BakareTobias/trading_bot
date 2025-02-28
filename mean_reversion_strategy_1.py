@@ -27,12 +27,13 @@ import candlestick_patterns_lib
 
 #indicator periods and oversold parameters, for easily manipulating trade parameters
 rsi_period = 3
-rsi_overbought = 75
-rsi_oversold = 25
+rsi_overbought = 70
+rsi_oversold = 20
 ema_period = 200
 ATR_period = 14
-atr_multiplier = 1.5
+atr_multiplier = 0.5
 adx_period = 14
+adx_level = 20
 
 #function to run strategy
 def mean_reversion_strategy(symbol,timeframe,balance,amount_to_risk=20):
@@ -94,7 +95,7 @@ def mean_reversion_strategy(symbol,timeframe,balance,amount_to_risk=20):
     return make_trade_outcome
 
 #function to backtest strategy
-def mean_reversion_strategy_backtest(symbol,timeframe):
+def mean_reversion_strategy_backtest(symbol,timeframe,test_period):
     """ function that runs mean reversion strategy. all rules defined above
     params: symbol - string of pair being traded
             timeframe - string of timeframe to run strategy on
@@ -106,13 +107,14 @@ def mean_reversion_strategy_backtest(symbol,timeframe):
     Step 2: Calculate indicators - calc_indicators()
     Step 3: Check if each condition is met 
             if yes, calculate trade parameters
-    Step 4: Check most recent candle for trading opportunity
-    Step 5: If trade event has occured, send order """
+   
+    return: data with trade parameters """
 
     #Step 1
     data = get_data(
         symbol=symbol,
         timeframe=timeframe,
+        test_period = test_period
         
     )
 
@@ -134,7 +136,7 @@ def mean_reversion_strategy_backtest(symbol,timeframe):
 
 
 #Step 1: retrieve data
-def get_data(symbol, timeframe):
+def get_data(symbol, timeframe,test_period=300):
     """ function to get data from mt5. data is in from of candlesticks
     param:  symbol: string
             timeframe: string
@@ -143,7 +145,7 @@ def get_data(symbol, timeframe):
     data = mt5_lib.get_candlesticks(
         symbol=symbol,
         timeframe=timeframe,
-        number_of_candles=50000
+        number_of_candles=test_period
     )
     return data
 
@@ -294,19 +296,19 @@ def det_trade(data):
     is_reversal_candle = data['is_reversal_candle']
     for i in range(len(data)):
         #BUYS
-        if ((ema_bias[i] == True) & (rsi_overbought_data[i] == False) & (BBand[i] == False) & (is_reversal_candle[i] == True) & (adx[i]<20)):
+        if ((ema_bias[i] == True) & (rsi_overbought_data[i] == False) & (BBand[i] == False) & (is_reversal_candle[i] == True) & (adx[i]<adx_level)):
             data.loc[i,'stop_price'] = close[i]
             data.loc[i,'stop_loss']  = close[i]-(atr[i]*atr_multiplier)
-            data.loc[i,'take_profit_1']= data.loc[i,'stop_price']+(atr[i]*3)
-            data.loc[i,'take_profit_2']= mb[i]
+            data.loc[i,'take_profit_1']= mb[i]
+            data.loc[i,'take_profit_2']= ub[i]
             data.loc[i,'place_trade']= True
         
         #SELLS
-        elif ((ema_bias[i] == False) & (rsi_overbought_data[i] == True) & (BBand[i] == True) & (is_reversal_candle[i] == True)& (adx[i]<20)):
+        elif ((ema_bias[i] == False) & (rsi_overbought_data[i] == True) & (BBand[i] == True) & (is_reversal_candle[i] == True)& (adx[i]<adx_level)):
             data.loc[i,'stop_price'] = close[i]
             data.loc[i,'stop_loss']  = (atr[i]*atr_multiplier)+close[i]
-            data.loc[i,'take_profit_1']= data.loc[i,'stop_price']-(atr[i]*3)
-            data.loc[i,'take_profit_2']= mb[i] 
+            data.loc[i,'take_profit_1']= mb[i] 
+            data.loc[i,'take_profit_2']= lb[i]
             data.loc[i,'place_trade']= True
 
     #drop rows not needed
