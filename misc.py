@@ -6,29 +6,32 @@ import json
 import mt5_lib
 
 
-#Import json
-def get_project_settings(import_filepath):
+import os
+import sys
+import json
+
+def get_project_settings():
     """ 
-    #Functon to import settings from settings.json
-    param: path to settings.json
-    return: settings as a dict object
+    Function to import settings from settings.json
+    Returns: settings as a dict object
     """
-    #check if path exists
+    # Determine the correct base path
+    if getattr(sys, 'frozen', False):  # Running as .exe
+        base_path = sys._MEIPASS
+    else:
+        base_path = os.path.dirname(os.path.abspath(__file__))
+
+    import_filepath = os.path.join(base_path, "settings.json")
+
+    # Check if path exists
     if os.path.exists(import_filepath):
-        #if yes, import file path
-        f = open(import_filepath, "r")
-        
-        #read the file 
-        project_settings = json.load(f)
-        
-        #close file
-        f.close()
-
-        #return project settings 
+        # Open and read the JSON file
+        with open(import_filepath, "r") as f:
+            project_settings = json.load(f)
         return project_settings
+    else:
+        raise ImportError(f"settings.json does not exist at: {import_filepath}")
 
-    else: #if it does not exist
-        raise ImportError('settings.json does not exist at provided location')
 
 
 def start_up(project_settings):
@@ -69,7 +72,7 @@ def checkInternetHttplib(url="www.google.com",timeout=3):
         # only header requested for fast operation
         connection.request("HEAD", "/")
         connection.close()  # connection closed
-        print("Internet On")
+        
         return True
     except Exception as e:
         raise Exception(f'Internet connection failed:{e}')

@@ -23,8 +23,7 @@ def calc_lot_size(balance, amount_to_risk, stop_loss, stop_price, symbol):
     symbol_name = symbol_name[0]
 
     #branch based on lot size 
-   #set pip value depending on symbol. JPY crosses all have 0.01 pip value
-    if ('JPY' in symbol) or ("XAU" in symbol):
+    if 'JPY' in symbol :
         #USDJPY pip size is 0.01
         pip_size = 0.01
         #calculate the amount of pips being risked 
@@ -36,7 +35,7 @@ def calc_lot_size(balance, amount_to_risk, stop_loss, stop_price, symbol):
         #calculate the raw lot size 
         raw_lot_size = amount_to_risk/(pip_value * no_of_pips_risked)
         
-    elif symbol_name == 'USDCAD':
+    elif symbol_name == 'EURUSD':
         #USDCAD pip size is 0.0001
         pip_size = 0.0001
         #calculate the amount of pips being risked 
@@ -48,15 +47,14 @@ def calc_lot_size(balance, amount_to_risk, stop_loss, stop_price, symbol):
 
         #calculate the raw lot size 
         raw_lot_size = pip_value / 10
-    else: #assuming pip size to be 0.0001
-        pip_size = 0.0001
-        #calculate the amount of pips being risked 
-        no_of_pips_risked = abs((stop_price - stop_loss) / pip_size)
-        #calculate pip value 
-        pip_value = amount_to_risk/no_of_pips_risked
-        #calculate the raw lot size 
-        raw_lot_size = pip_value / 10
-        
+    ###JOHN DERIV PAIRS
+    else: #if one of John Pairs, lot size is default 0.01
+
+        raw_lot_size = 0.01
+
+
+
+    
     #raise error if lot size is less than 0.01(smallest size most brokers accept)
     if raw_lot_size < 0.01:
             raise ValueError (f'lot size({raw_lot_size}) is too small: /n Entry Price:{stop_price}  Stop Loss:{stop_loss}')
@@ -65,7 +63,7 @@ def calc_lot_size(balance, amount_to_risk, stop_loss, stop_price, symbol):
     #rounds to 2 decimal places.(on a small account ie <5000 USD this rounding may affect risk)
     lot_size = round(lot_size,2)
     #add in a catch to make sure lot size is not extreme 
-    if lot_size >=10:
+    if lot_size >=1:
         lot_size = 9.99
 
     return lot_size

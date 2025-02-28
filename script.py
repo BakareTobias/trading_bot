@@ -4,7 +4,6 @@ import pandas
 import misc
 import mt5_lib
 import ema_cross_strategy
-import telegram_lib
 
 
 
@@ -25,7 +24,7 @@ if __name__ == '__main__':
     settings_filepath = "settings.json"    
 
     #get  import filepath
-    project_settings = misc.get_project_settings(import_filepath=settings_filepath)
+    project_settings = misc.get_project_settings()
 
     # startup procedure
     startup = misc.start_up(project_settings=project_settings)
@@ -42,9 +41,11 @@ if __name__ == '__main__':
         #start while loop; #exit loop if Ctrl+C is pressed
         try:
             while 1:
+                #check internet connection
+                misc.checkInternetHttplib()
                 #get a value for current time. [using BTCUSD as it trads 24/7]
                 time_candle = mt5_lib.get_candlesticks(
-                    symbol='BTCUSD.cfd',
+                    symbol='BTCUSD.0',
                     timeframe=project_settings['mt5']['timeframe'],
                     number_of_candles=1
                 )
@@ -52,7 +53,7 @@ if __name__ == '__main__':
                 current_time = time_candle['time'][0]
                 #compare current_time to previous_time
                 if current_time != previous_time:#new candle has occured; proceed with strategy
-                    print('New candle! Lets trade')
+                    print(f'New M15 candle')
 
                     #update previous_time with current_time value
                     previous_time = current_time
@@ -61,9 +62,8 @@ if __name__ == '__main__':
                     
                     
                 else: #no new candle has been formed
-                    misc.print_sleeping()
+                    
 
-
-                    time.sleep(30)#makes system more stable, reduces cpu overhead from constant querying
+                    time.sleep(2)#makes system more stable, reduces cpu overhead from constant querying
         except KeyboardInterrupt: #exit loop if Ctrl+C is pressed
             pass    
