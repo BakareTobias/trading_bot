@@ -1,6 +1,19 @@
 import pandas
-import talib
 import numpy as np
+import os
+import sys
+import talib
+
+# Ensure TA-Lib works correctly when running as an .exe
+if getattr(sys, 'frozen', False):  # Running as an .exe
+    base_path = sys._MEIPASS
+    talib_path = os.path.join(base_path, "talib", "_ta_lib.cp310-win_amd64.pyd")
+    if os.path.exists(talib_path):
+        os.environ["TA_LIB_PATH"] = talib_path
+
+# Your main script starts here
+print("TA-Lib version:", talib.VERSION)
+
 
 #define a function to create custom EMA of any size using TALIB
 def calc_ema(dataframe, ema_size):
