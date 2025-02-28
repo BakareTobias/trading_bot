@@ -13,11 +13,11 @@ def run_strategy(project_settings):
     #symbol to trade
     symbols = project_settings['mt5']['symbols']
     #timeframe to trade 
-    timeframe= project_settings['mt5']['timeframe']
+    timeframe= project_settings['mt5']['timeframe'][0]
 
    
 
-    
+
 
     #run through strategy for specified symbols 
     for symbol in symbols:
@@ -86,9 +86,11 @@ def ema_cross_strategy(symbol,timeframe, ema_one, ema_two, balance, amount_to_ri
         ema_one=ema_one,
         ema_two=ema_two
     )
-
+   
     #Step 4
-    trade_event = data.tail(2).copy( )#copy info for most recent formed candle 
+
+    #note: trde signal canno tbe generated on a candle till it has finished forming. so we take the last 2 candles, the first will have our signal
+    trade_event = data.tail(2).copy()#copy info for most recent formed candle 
     trade_event = trade_event.head(1)
     if trade_event['ema_cross'].values:
         #Make trade requires balance, comment, amount_to_risk
@@ -103,6 +105,7 @@ def ema_cross_strategy(symbol,timeframe, ema_one, ema_two, balance, amount_to_ri
             stop_price=trade_event['stop_price'].values,
             symbol=symbol
         )
+
 
         #do not place a new trade till old trade is closed
         open_trades = mt5_lib.get_filtered_list_of_orders(
@@ -239,7 +242,9 @@ def det_trade(data, ema_one, ema_two):
     :param dataframe: dataframe of data with indicators
     :param ema_one: integer of EMA size
     :param ema_two: integer of EMA size
-    :return: dataframe with trade values added
+    
+    
+    return: dataframe with trade values added
     """
      
     #Get the column names 
@@ -249,10 +254,10 @@ def det_trade(data, ema_one, ema_two):
     #choose largest EMA (EMA that will be used for stop loss)
     if ema_one > ema_two:
         ema_column = ema_one_column
-        min_value  = ema_one
+        longer_ema  = ema_one
     elif ema_two > ema_one:
         ema_column = ema_two_column
-        min_value = ema_two
+        longer_ema = ema_two
     else:
         #EMA values are equal, raise an error
         raise ValueError('EMA values are the same...')
@@ -268,13 +273,13 @@ def det_trade(data, ema_one, ema_two):
     #iterate through the dataframe and calculate trade signal for EMA cross
     for i in range(len(dataframe)):
         #skip rows until EMA starts 
-        if i<= (min_value ):
+        if i<= (longer_ema ):
             continue
         else:
             
             #find when EMA cross is True
             if dataframe.loc[i,'ema_cross']:
-                #determine if green candle
+                #determine if green candle 
                 if dataframe.loc[i,'open'] < dataframe.loc[i,'close']:
                     #stop loss = larger EMA 
                     stop_loss = round(dataframe.loc[i,ema_column], 4)

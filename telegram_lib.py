@@ -17,6 +17,18 @@ def send_telegram_message(stop_price, stop_loss, take_profit, lot_size,  comment
             comment - string of strategy and pair being traded
             symbol - string of symbol to trade
     """
+    #round values to 4
+    #set pip value depending on symbol. JPY crosses all have 0.01 pip value
+    if ('JPY' in comment) or ("XAU" in comment):
+       
+        dp  = 2#round values to 2 decimal places
+
+    else:
+        
+        dp = 4#round values to 4 decimal places
+    stop_price = round(stop_price,dp)
+    take_profit = round(take_profit,dp)
+    stop_price = round(stop_price,dp)
     #determine if buy or sell
     if stop_price > stop_loss:
         order_type = 'BUY'
