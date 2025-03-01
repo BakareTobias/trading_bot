@@ -46,7 +46,7 @@ if __name__ == '__main__':
                 #get a value for current time. [using BTCUSD as it trads 24/7]
                 time_candle = mt5_lib.get_candlesticks(
                     symbol='BTCUSD.0',
-                    timeframe=project_settings['mt5']['timeframe'],
+                    timeframe=project_settings['mt5']['timeframe'][0],
                     number_of_candles=1
                 )
                 #extract time value from time_candle and assign to current time

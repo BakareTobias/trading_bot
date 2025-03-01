@@ -2,6 +2,7 @@ import mt5_lib
 import ta_indicator_lib
 import helper_library
 import candlestick_patterns_lib
+import telegram_lib
 
 #MEAN REVERSION STRATEGY 1
 #INDICATORS: BOLLINGER BANDS, RSI, EMA, ATR
@@ -49,7 +50,7 @@ def mean_reversion_strategy(symbol,timeframe,balance,amount_to_risk=20):
     Step 3: Check if each condition is met 
             if yes, calculate trade parameters
     Step 4: Check most recent candle for trading opportunity
-    Step 5: If trade event has occured, send order """
+    Step 5: If trade event has occured, send telegram signal  """
 
     #Step 1
     data = get_data(
@@ -77,10 +78,42 @@ def mean_reversion_strategy(symbol,timeframe,balance,amount_to_risk=20):
     
     if trade_event['place_trade'].values:
         #Make trade requires balance, comment, amount_to_risk
+        #Create comment
         comment_string = f'Mean_Reversion_Strategy_1_{symbol}'
-        print(comment_string)
+        
+        #calculate lot-size to pass to telegram function
+        lot_size = helper_library.calc_lot_size(
+            balance=balance,
+            amount_to_risk=amount_to_risk,
+            stop_loss=trade_event['stop_loss'].values,
+            stop_price=trade_event['stop_price'].values,
+            symbol=symbol
+        )
 
-        #Make trade 
+
+        #do not place a new trade till old trade is closed
+        open_trades = mt5_lib.get_filtered_list_of_orders(
+            symbol=symbol, 
+            comment=comment_string)
+    
+        if open_trades:
+            print(f"Mean Reversion Trade already open for {symbol}. Skipping new trade.")
+            return False  # Do not open a new trade
+
+
+        #function to send telegram message 
+        telegram_lib.send_telegram_message(
+            stop_price=trade_event['stop_price'].values,
+            stop_loss=trade_event['stop_loss'].values,
+            take_profit=trade_event['take_profit_1'].values,
+            lot_size=lot_size,
+            comment=comment_string,
+            symbol = symbol
+        )
+
+        
+
+        """ #Make trade 
         make_trade_outcome = helper_library.make_trade(
             balance=balance,
             comment=comment_string,
@@ -89,7 +122,8 @@ def mean_reversion_strategy(symbol,timeframe,balance,amount_to_risk=20):
             take_profit=trade_event['take_profit_1'].values,
             stop_loss=trade_event['stop_loss'].values,
             stop_price=trade_event['stop_price'].values
-        )
+        ) """
+        make_trade_outcome = True
     else: 
         make_trade_outcome = False
     return make_trade_outcome
@@ -341,33 +375,33 @@ def run_strategy(project_settings):
     return: Boolean. True = stategy ran successfully with no errors.else = false """
 
     #symbol to trade
-    symbols = project_settings['mt5']['symbols']
+    symbol = project_settings['mt5']['symbols'][0]
     #timeframe to trade 
     timeframe= project_settings['mt5']['timeframe'][0]
 
 
 
-    #run through strategy for specified symbols 
-    for symbol in symbols:
-        #Strategy Risk Management
-        #Generate comment string 
-        comment_string = f'Mean_Reversion_Strategy_{symbol}' #as to be consistent with other definitions through out project
+    #run through strategy for only EURUSD
 
-        #cancel orders related to symbol and strategy 
-        """ mt5_lib.cancel_filtered_orders(
-            symbol=symbol,
-            comment=comment_string
-        ) """
-        #Trade strategy 
-        data = mean_reversion_strategy(
-            symbol=symbol,
-            timeframe=timeframe,
-            balance=2000,
-            ) 
-        if data:
-            print(f'Trade signal detected. Mean reversion strategy 1 trade placed successfully on {symbol}:{timeframe} ')      
-        else:
-            print(f'No trade signal detected for {symbol}')
+    #Strategy Risk Management
+    #Generate comment string 
+    comment_string = f'Mean_Reversion_Strategy_{symbol}' #as to be consistent with other definitions through out project
+
+    #cancel orders related to symbol and strategy 
+    """ mt5_lib.cancel_filtered_orders(
+        symbol=symbol,
+        comment=comment_string
+    ) """
+    #Trade strategy 
+    data = mean_reversion_strategy(
+        symbol=symbol,
+        timeframe=timeframe,
+        balance=2000,
+        ) 
+    if data:
+        print(f'Trade signal detected. Mean reversion strategy 1 trade placed successfully on {symbol}:{timeframe} ')      
+    else:
+        print(f'No trade signal detected for {symbol}')
 
 
     

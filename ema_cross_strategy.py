@@ -90,8 +90,8 @@ def ema_cross_strategy(symbol,timeframe, ema_one, ema_two, balance, amount_to_ri
     #Step 4
 
     #note: trde signal canno tbe generated on a candle till it has finished forming. so we take the last 2 candles, the first will have our signal
-    trade_event = data.tail(2).copy()#copy info for most recent formed candle 
-    trade_event = trade_event.head(1)
+    trade_event = data.tail(1).copy()#copy info for most recent formed candle 
+    #trade_event = trade_event.head(1)
     if trade_event['ema_cross'].values:
         #Make trade requires balance, comment, amount_to_risk
         #Create comment

@@ -101,7 +101,7 @@ def get_candlesticks(symbol, timeframe,number_of_candles):
     mt5_timeframe = set_query_timeframe(timeframe=timeframe)
 
     #candles = copy rates from position
-    candles = MetaTrader5.copy_rates_from_pos(symbol, mt5_timeframe, 0, number_of_candles   )#the zero candle is current candle still being formed, 
+    candles = MetaTrader5.copy_rates_from_pos(symbol, mt5_timeframe, 1, number_of_candles   )#the zero candle is current candle still being formed, 
 
     #convert to a dataframe 
     dataframe = pandas.DataFrame(candles)

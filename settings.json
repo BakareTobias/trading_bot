@@ -4,7 +4,7 @@
         "password": "Exbiznes01.",
         "Server": "Deriv-Demo",
         "mt5_pathway":"C:/Program Files/MetaTrader 5/terminal64.exe",
-        "symbols" : ["EURUSD.0","USDJPY.0","GBPJPY.0","GBPCHF.0","Volatility 150 (1s) Index.0","Jump 100 Index.0","Jump 75 Index.0","Jump 50 Index.0"],
+        "symbols" : ["EURUSD.0","USDJPY.0","GBPJPY.0","Volatility 150 (1s) Index.0","Jump 100 Index.0","Jump 75 Index.0","Jump 50 Index.0"],
         "timeframe": ["M15","D1"]
     },
 
