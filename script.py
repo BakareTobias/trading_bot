@@ -51,9 +51,21 @@ if __name__ == '__main__':
                 )
                 #extract time value from time_candle and assign to current time
                 current_time = time_candle['time'][0]
+                
+                #convert from unix epoch to standard time
+                current_time =  pandas.to_datetime(current_time, unit='s', utc=True)
+                
+                current_time = current_time.tz_convert("Etc/GMT-1")  # Convert to UTC-1
+
+
+                #shorten from 2025-02-07 00:00:00 +00:00 to 25-02-07 00:00
+                current_time = current_time.strftime("%y-%m-%d %H:%M")
+                
+               
                 #compare current_time to previous_time
                 if current_time != previous_time:#new candle has occured; proceed with strategy
-                    print(f'New M15 candle')
+                   
+                    print(f'New M15 candle: {current_time}')
 
                     #update previous_time with current_time value
                     previous_time = current_time
