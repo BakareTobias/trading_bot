@@ -26,6 +26,7 @@ def send_telegram_message(stop_price, stop_loss, take_profit, lot_size,  comment
     else:
         
         dp = 4#round values to 4 decimal places
+    
     stop_price = round(stop_price,dp)
     take_profit = round(take_profit,dp)
     stop_price = round(stop_price,dp)

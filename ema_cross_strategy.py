@@ -90,19 +90,25 @@ def ema_cross_strategy(symbol,timeframe, ema_one, ema_two, balance, amount_to_ri
     #Step 4
 
     #note: trde signal canno tbe generated on a candle till it has finished forming. so we take the last 2 candles, the first will have our signal
-    trade_event = data.tail(1).copy()#copy info for most recent formed candle 
+    trade_event = data.tail(2).copy()
+    trade_event = trade_event.head(1).copy()#copy info for most recent formed candle 
+    
     #trade_event = trade_event.head(1)
     if trade_event['ema_cross'].values:
         #Make trade requires balance, comment, amount_to_risk
         #Create comment
         comment_string = f'EMA_Cross_Strategy_{symbol}'
+
+        stop_loss=float(trade_event['stop_loss'].values)
+        stop_price=float(trade_event['stop_price'].values)
+        take_profit=float(trade_event['take_profit'].values,)
         
         #calculate lot-size to pass to telegram function
         lot_size = helper_library.calc_lot_size(
             balance=balance,
             amount_to_risk=amount_to_risk,
-            stop_loss=trade_event['stop_loss'].values,
-            stop_price=trade_event['stop_price'].values,
+            stop_loss=stop_loss,
+            stop_price=stop_price,
             symbol=symbol
         )
 
@@ -119,9 +125,9 @@ def ema_cross_strategy(symbol,timeframe, ema_one, ema_two, balance, amount_to_ri
 
         #function to send telegram message 
         telegram_lib.send_telegram_message(
-            stop_price=trade_event['stop_price'].values,
-            stop_loss=trade_event['stop_loss'].values,
-            take_profit=trade_event['take_profit'].values,
+            stop_price=stop_price,
+            stop_loss=stop_loss,
+            take_profit=take_profit,
             lot_size=lot_size,
             comment=comment_string,
             symbol = symbol
