@@ -1,3 +1,4 @@
+import datetime
 import time
 import pandas
 #Import self made custom libraries
@@ -74,8 +75,18 @@ if __name__ == '__main__':
                     
                     
                 else: #no new candle has been formed
-                    
 
-                    time.sleep(2)#makes system more stable, reduces cpu overhead from constant querying
+                    #check how many minutes till next 15 minute candle, and wait that long before checking again
+                    now = datetime.datetime.now()
+                    minutes = now.minute
+                    seconds = now.second
+                    
+                    #calculate time till next candle
+                    wait_time = (15-(minutes % 15)) * 60 - seconds
+
+                    if wait_time > 0:
+                        time.sleep(wait_time)
+
+                    time.sleep(3)#wait extra 3 seconds to allow candle fully form
         except KeyboardInterrupt: #exit loop if Ctrl+C is pressed
             pass    
